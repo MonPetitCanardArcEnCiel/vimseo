@@ -696,6 +696,7 @@ class BayesTool(BaseAnalysisTool):
                 else:
                     axes[i, j].set_axis_off()
 
+        Path(directory_path).mkdir(parents=True, exist_ok=True)
         save_show_figure(
             fig,
             show,
@@ -757,10 +758,10 @@ class BayesTool(BaseAnalysisTool):
 
             raise ValueError(msg)
 
-        if save:
-            save_show_figure(
-                fig, show, directory_path / "posterior_predictive.png" if save else ""
-            )
+        Path(directory_path).mkdir(parents=True, exist_ok=True)
+        save_show_figure(
+            fig, show, directory_path / "posterior_predictive.png" if save else ""
+        )
 
         return ax, ax1
 
@@ -776,7 +777,7 @@ class BayesTool(BaseAnalysisTool):
         """Generate the different plots.
 
         Args:
-            kwargs: a dictionnary for plot options.
+            kwargs: a dictionary for plot options.
             n_disc: The discretization of the input.`
             name: The name of the input variable.`
             directory_path: where to save the plot.

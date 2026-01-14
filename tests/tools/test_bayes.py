@@ -23,7 +23,6 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
 
 import pytest
 from matplotlib.figure import Figure
@@ -42,9 +41,6 @@ from openturns import Uniform
 from sqlalchemy.cyextension.util import Mapping
 
 from vimseo.tools.bayes.bayes_analysis import BayesTool
-
-if TYPE_CHECKING:
-    from vimseo.tools.bayes.bayes_analysis_result import BayesAnalysisResult
 
 random.seed(1)  # noqa: NPY002
 
@@ -68,7 +64,7 @@ def prior() -> array:
 
 
 @pytest.fixture(scope="module")
-def sampler(model, prior, data) -> BayesAnalysisResult:
+def bayes_analysis(model, prior, data) -> BayesTool:
     """A raw MCMC sampling."""
     analysis = BayesTool()
     analysis.execute(likelihood_dist=model, prior_dist=prior, data=data, n_mcmc=1_000)
@@ -76,10 +72,10 @@ def sampler(model, prior, data) -> BayesAnalysisResult:
 
 
 @pytest.fixture(scope="module")
-def processed_analysis(sampler) -> BayesAnalysisResult:
+def processed_analysis(bayes_analysis) -> BayesTool:
     """A MCMC chain."""
-    sampler.post(burnin=50)
-    return sampler
+    bayes_analysis.post(burnin=50)
+    return bayes_analysis
 
 
 def test_missing_likelihood():
@@ -222,9 +218,11 @@ def test_instanciation_prior(
     assert analysis.result.raw_samples.shape[2] == dim
 
 
-def test_return_type(tmp_wd, sampler):
+def test_return_type(tmp_wd, bayes_analysis):
     """Check the return type of plot_burnin."""
-    assert isinstance(sampler.plot_burnin(result=sampler.result, show=False), Figure)
+    assert isinstance(
+        bayes_analysis.plot_burnin(result=bayes_analysis.result, show=False), Figure
+    )
 
 
 def test_execution_results(processed_analysis):
@@ -259,19 +257,19 @@ def test_execution_results(processed_analysis):
     assert "ml" in attributes
 
 
-def test_error_cropping(sampler):
+def test_error_cropping(bayes_analysis):
     """Check that an error is raised when not enough samples are generated."""
     mock_samples = zeros((10, 30, 2))
     with pytest.raises(
         ValueError,
         match=re.escape("Not enough MCMC samples have been generated."),
     ):
-        sampler.cropping(mock_samples, thin=30, burnin=1, dim=2)
+        bayes_analysis.cropping(mock_samples, thin=30, burnin=1, dim=2)
 
 
-def test_lppd(sampler):
+def test_lppd(bayes_analysis):
     """Check the returned lppd."""
-    assert sampler.lppd(burnin=1, n_mcmc=40) > 0
+    assert bayes_analysis.lppd(burnin=1, n_mcmc=40) > 0
 
 
 def test_marginal_likelihood(processed_analysis):
@@ -304,11 +302,16 @@ def test_plot_posterior_predictive(tmp_wd, processed_analysis):
         )
 
 
-def test_plot_results_return_type(processed_analysis):
+@pytest.mark.parametrize("plot_directory", ["", "foo"])
+def test_plot_results_return_type(tmp_wd, model, prior, data, plot_directory):
     """Check that plot_results output is a dictionary."""
     # TODO: bug when using tmp_wd, OK when not using tmp_wd
-    plot_checks = processed_analysis.plot_results(
-        directory_path="foo", save=True, show=False
+    analysis = BayesTool()
+    analysis.execute(likelihood_dist=model, prior_dist=prior, data=data, n_mcmc=1_000)
+    analysis.post(burnin=50)
+    assert analysis.working_directory.absolute().exists()
+    plot_checks = analysis.plot_results(
+        directory_path=plot_directory, save=True, show=False
     )
     assert isinstance(plot_checks, Mapping)
     assert "posterior_samples" in plot_checks

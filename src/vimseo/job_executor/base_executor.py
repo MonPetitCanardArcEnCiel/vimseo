@@ -36,8 +36,8 @@ from typing import ClassVar
 import jinja2
 from docstring_inheritance import GoogleDocstringInheritanceMeta
 
-from vimseo.job_executor.job_options import BaseJobOptions
-from vimseo.job_executor.user_job_options import BaseUserJobOptions
+from vimseo.job_executor.base_job_options import BaseJobOptions
+from vimseo.job_executor.base_user_job_options import BaseUserJobOptions
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

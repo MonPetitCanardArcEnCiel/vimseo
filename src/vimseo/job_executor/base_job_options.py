@@ -24,7 +24,7 @@
 
 from __future__ import annotations
 
-from vimseo.job_executor.user_job_options import BaseUserJobOptions
+from vimseo.job_executor.base_user_job_options import BaseUserJobOptions
 
 
 class BaseJobOptions(BaseUserJobOptions):

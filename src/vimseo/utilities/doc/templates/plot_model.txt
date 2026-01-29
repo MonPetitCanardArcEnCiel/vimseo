@@ -6,10 +6,10 @@
 """
 from __future__ import annotations
 
-from vims import EXAMPLE_RUNS_DIR_NAME
-from vims.api import create_model
-from vims.core.base_integrated_model import BaseModelOptions
-from vims.core.base_integrated_model import PersistencyPolicy
+from vimseo import EXAMPLE_RUNS_DIR_NAME
+from vimseo.api import create_model
+from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.base_integrated_model import PersistencyPolicy
 
 # %%
 # First, let's instantiate the model for a given load case:
@@ -20,7 +20,7 @@ model = create_model(
     model_name,
     load_case,
     check_subprocess=True,
-    model_options=BaseModelOptions(
+    model_options=IntegratedModelSettings(
         directory_archive_root=f"../{EXAMPLE_RUNS_DIR_NAME}/archive/model_gallery",
         directory_scratch_root=f"../{EXAMPLE_RUNS_DIR_NAME}/scratch/model_gallery",
         cache_file_path=f"../{EXAMPLE_RUNS_DIR_NAME}/caches/model_gallery/{model_name}_{load_case}_cache.hdf"

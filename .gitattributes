@@ -18,6 +18,7 @@
 *.pack binary
 *.pdf binary
 *.png binary
+*.PNG binary
 *.pptx binary
 *.xcf binary
 *.xlsm binary

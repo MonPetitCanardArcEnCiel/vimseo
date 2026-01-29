@@ -7,15 +7,7 @@
  Commons, PO Box 1866, Mountain View, CA 94042, USA.
 -->
 
-<!--
- Copyright (c) 2015 IRT-AESE.
- All rights reserved.
 
- Contributors:
-    INITIAL AUTHORS - API and implementation and/or documentation
-        :author: XXXXXXXXXXX
-    OTHER AUTHORS   - MACROSCOPIC CHANGES
--->
 
 # Abstract for ASME 2025
 
@@ -58,14 +50,14 @@ regarding the industrial specification
 (in terms of input output interface, UQ method and computational load management)
 is to allow a fast prototyping of typical end-to-end workflows.
 
-The VIMS platform under development at IRT Saint Exupery implements such a workflow approach based on the
-workflow engine of GEMSEO. VIMS integrates VV&UQ scenarios such as solution verification, code verification
+The VIMSEO platform under development at IRT Saint Exupery implements such a workflow approach based on the
+workflow engine of GEMSEO. VIMSEO integrates VV&UQ scenarios such as solution verification, code verification
 stochastic validation, efficient design value estimation, together with more generic bricks
 (sensitivity analysis, design of experiment, surrogate modelling).
 Since compatible with GEMSEO [@gallard2018gemseo], it can seamlessly integrate advanced optimization algortihms
 and multi-disciplinary optimization bricks in the workflows.
 
-To assess the capability of VIMS to generate and execute realistic VV&UQ workflows,
+To assess the capability of VIMSEO to generate and execute realistic VV&UQ workflows,
 one of its plugins is dedicated to composite damage modelling, and integrates several state-of-the-art parametric
 models of composite coupons and basic structure components.
 End-to-end VV&UQ workflows involving these composite damage models are presented, from the workflow-prototyping interface

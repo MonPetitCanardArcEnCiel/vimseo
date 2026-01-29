@@ -1,4 +1,4 @@
-# Copyright 2021 IRT Saint Exupéry, https://www.irt-saintexupery.com
+# Copyright 2021 IRT Saint Exupery, https://www.irt-saintexupery.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -60,35 +60,35 @@ def write_json_dict(output_file, dict_outputs):
         f.write(json.dumps(dict_outputs, indent=4))
 
 
-def write_job_outputs_csv_exhaustive(name_out_file, dict_scalars, dict_curves):
+def write_job_outputs_csv_exhaustive(output_file, dict_scalars, dict_curves):
     """Write an exhaustive CSV output file based on scalars and curves outputs,
     formated for human reading."""
 
-    f = Path(name_out_file).open("w")  # noqa: SIM115
-    f.write(get_metadata_txt())
+    with open(output_file, 'w') as f:
+        f.write(get_metadata_txt())
 
-    # Writing the scalars in the text file
-    f.write("\n########################################################\n")
-    for key, value in dict_scalars.items():
-        value_format = "{0:.3f}".format(value) if isinstance(value, float) else value
-        f.write(key + " = " + str(value_format) + "\n")
+        # Writing the scalars in the text file
+        f.write("\n########################################################\n")
+        for key, value in dict_scalars.items():
+            value_format = "{0:.3f}".format(value) if isinstance(value, float) else value
+            f.write(key + " = " + str(value_format) + "\n")
 
-    # Writing the curves in the text file
-    f.write("########################################################\n")
-    for key in dict_curves:
-        f.write(key + " ; ")
-    f.write("\n")
-    max_len = max(len(v) for k, v in dict_curves.items())
-    for i in range(max_len):
+        # Writing the curves in the text file
+        f.write("########################################################\n")
         for key in dict_curves:
-            if i < len(dict_curves[key]):
-                formated_text = "{0:.6f}".format(dict_curves[key][i])
-                f.write(formated_text)
-
-            f.write(";")
-
+            f.write(key + " ; ")
         f.write("\n")
-    f.close()
+        max_len = max(len(v) for k, v in dict_curves.items())
+        for i in range(max_len):
+            for key in dict_curves:
+                if i < len(dict_curves[key]):
+                    formated_text = "{0:.6f}".format(dict_curves[key][i])
+                    f.write(formated_text)
+
+                f.write(";")
+
+            f.write("\n")
+        f.close()
 
 
 def local_slope_computation(
@@ -188,7 +188,6 @@ class EnhancedJSONEncoderModelWrapper(json.JSONEncoder):
         return super().default(o)
 
 
-# def write_job_arguments_to_file(argument_file: Path, data: Mapping[str, Any]) -> None:
 def write_job_arguments_to_file(argument_file, data):
     """Write a json file containing the parameters for the external solver.
 

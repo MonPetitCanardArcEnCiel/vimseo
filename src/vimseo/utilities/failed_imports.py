@@ -12,26 +12,24 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import TYPE_CHECKING
+import json
+import pathlib
 
-from docstring_inheritance import GoogleDocstringInheritanceMeta
-
-if TYPE_CHECKING:
-    from pathlib import Path
+from vimseo.job_executor.job_executor_factory import JobExecutorFactory
 
 
-@dataclass
-class LibraryFile(metaclass=GoogleDocstringInheritanceMeta):
-    """A file contained in the library (e.g. lib_vims)."""
+def write_failed_imports():
+def write_failed_imports():
+    factory = JobExecutorFactory()
 
-    package_name: Path | str = "vimseo"
-    """The name of the package containing the library.
+    (
+        pathlib.Path.cwd() / f"failed_imports_{factory.__class__.__name__}.txt"
+    ).write_text(
+        json.dumps(factory.failed_imports, indent=4) + str(factory.class_names),
+        encoding="utf-8",
+    )
 
-    The library naming convention is "lib_{package_name}".
-    """
 
-    file_path: Path | str = ""
-    """The path to the file relative to the library."""
+if __name__ == "__main__":
+    write_failed_imports()

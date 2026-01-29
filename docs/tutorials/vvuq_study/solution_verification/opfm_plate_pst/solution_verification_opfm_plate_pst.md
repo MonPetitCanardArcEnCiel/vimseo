@@ -7,15 +7,7 @@
  Commons, PO Box 1866, Mountain View, CA 94042, USA.
 -->
 
-<!--
- Copyright (c) 2015 IRT-AESE.
- All rights reserved.
 
- Contributors:
-    INITIAL AUTHORS - API and implementation and/or documentation
-        :author: XXXXXXXXXXX
-    OTHER AUTHORS   - MACROSCOPIC CHANGES
--->
 
 
 ### Solution verification for OpfmPlate model PST
@@ -82,5 +74,5 @@ Raw model input and output data are also available:
 {{ read_csv('raw_opfm_plate_pst.csv') }}
 
 These figures and other information about the model can be explored interactively in a dashboard.
-The dashboard can be opened by typing ``dashboard_verification`` in a console where VIMS environment is activated.
+The dashboard can be opened by typing ``dashboard_verification`` in a console where VIMSEO environment is activated.
 The second tab allows to explore code verification and the third tab is for solution verification exploration.

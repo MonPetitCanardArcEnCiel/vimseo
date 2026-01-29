@@ -78,9 +78,6 @@ plugins:
     # Gitlab pages expects the docs in this directory.
     deploy_prefix: public
 - table-reader
-- exclude:
-    glob:
-      - reference/vims/tools/main_dashboard/pages/*
 - autorefs
 
 nav:
@@ -105,7 +102,7 @@ nav:
   - Run a study: how_to/run_a_study.md
   - Integrate new models: how_to/abaqus_model_integration.md
   - Define a Space of Parameters: how_to/parameter_space/index.md
-- API: reference/vims/
+- API: reference/vimseo/
 - Reference guides:
    - Available Models: generated/runnable_examples/01_models
    - Materials: references/materials.md
@@ -116,10 +113,7 @@ nav:
    - State of the Art: references/state_of_the_art.md
    - Acronyms: references/acronyms.md
 - Tutorials:
-    - VVUQ study:
-        - Code Verification: tutorials/vvuq_study/code_verification/index.md
-        - Solution Verification: tutorials/vvuq_study/solution_verification/index.md
-        - Sensitivity Analysis: tutorials/vvuq_study/sensitivity_analysis/index.md
+    - VVUQ study: tutorials/vvuq_study/introduction.md
 - Explanations:
     - Conference abstracts:
         - ASME 2025: explanations/asme2025/abstract.md

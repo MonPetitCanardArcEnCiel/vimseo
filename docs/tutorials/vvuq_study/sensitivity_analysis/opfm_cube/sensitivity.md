@@ -7,20 +7,12 @@
  Commons, PO Box 1866, Mountain View, CA 94042, USA.
 -->
 
-<!--
- Copyright (c) 2015 IRT-AESE.
- All rights reserved.
 
- Contributors:
-    INITIAL AUTHORS - API and implementation and/or documentation
-        :author: XXXXXXXXXXX
-    OTHER AUTHORS   - MACROSCOPIC CHANGES
--->
 
 ## Results for OpfmCube
 
 The results for the OpfmCube model are presented based on the sensitivity viewer dashboard,
-which can be obtained by typing ``dashboard_sensitivity`` in a console where VIMS is installed:
+which can be obtained by typing ``dashboard_sensitivity`` in a console where VIMSEO is installed:
 
 ## OpfmCube PST
 

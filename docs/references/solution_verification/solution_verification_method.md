@@ -7,15 +7,7 @@
  Commons, PO Box 1866, Mountain View, CA 94042, USA.
 -->
 
-<!--
- Copyright (c) 2015 IRT-AESE.
- All rights reserved.
 
- Contributors:
-    INITIAL AUTHORS - API and implementation and/or documentation
-        :author: XXXXXXXXXXX
-    OTHER AUTHORS   - MACROSCOPIC CHANGES
--->
 
 ## Solution verification
 
@@ -31,7 +23,7 @@ to estimate the confidence in Richardson extapolation.
 
     The time (for explicit models) or pseudo-time integration scheme could also be verified.
 
-These two methods are implemented in VIMS, in the tool named ``DiscretizationSolutionVerification``.
+These two methods are implemented in VIMSEO, in the tool named ``DiscretizationSolutionVerification``.
 and can be displayed by the dashboard ``dashboard_verification``.
 Solution verification is performed through a convergence study of the solution
 on four progressively refined meshes (only three meshes would be strictly necessary),
@@ -115,7 +107,7 @@ and similarly as for the $GCI$:
 
 $E_b(RDE) = q_{\gamma_3} (1 \pm RDE)$
 
-TODO: refer to vims doc once ported to mkdocs and deployed
+TODO: refer to vimseo doc once ported to mkdocs and deployed
 
 TODO: add a synthetic uncertainty indicator, that can be used for decision making.
 

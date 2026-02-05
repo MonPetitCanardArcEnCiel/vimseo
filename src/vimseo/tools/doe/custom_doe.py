@@ -22,6 +22,7 @@
 #    OTHER AUTHORS   - MACROSCOPIC CHANGES
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 from gemseo.algos.design_space import DesignSpace
@@ -42,6 +43,8 @@ from vimseo.tools.doe.doe_result import DOEResult
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+LOGGER = logging.getLogger(__name__)
 
 
 class CustomDOESettings(BaseSettings):
@@ -111,7 +114,14 @@ class CustomDOETool(BaseAnalysisTool):
             if len(options["input_names"]) == 0
             else options["input_names"]
         )
-        # TODO warn if input_names are not in model inputs
+        if not set(input_names).issubset(set(model.get_input_data_names())):
+            LOGGER.warning(
+                "Some of the specified input names are not "
+                f"input variables of the model: {set(input_names) - set(model.get_input_data_names())}. "
+            )
+            input_names = [
+                name for name in input_names if name in model.get_input_data_names()
+            ]
 
         output_names = _set_output_names(model, options["output_names"])
 

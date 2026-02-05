@@ -74,6 +74,8 @@ from numpy import arange
 from numpy import array
 from numpy import full
 from numpy import vstack
+from pandas import DataFrame
+from pydantic import ConfigDict
 from pydantic import Field
 from strenum import StrEnum
 
@@ -118,6 +120,8 @@ class Analysis(StrEnum):
 
 # TODO remove fields 'input_names' and 'output_names'
 class SolutionVerificationSettings(CustomDOESettings):
+    model_config = ConfigDict(arbitrary_types_allowed=True, extra="forbid")
+
     metric_names: list[str] = Field(
         default=["AbsoluteErrorMetric"],
         description="The name of the error metrics to compute.",
@@ -128,11 +132,11 @@ class SolutionVerificationSettings(CustomDOESettings):
     element_size_ratio: float | None = Field(
         default=None,
         description=r"The ratio between consecutive element sizes."
-        "If the default value of ``element_size_variable_name`` is "
-        ":math:`dx_0`, then "
-        ":math:`element_size_values= "
-        "[dx_0 \times r, dx_0, dx_0 \times r ^ {-1}, dx_0 \times r ^ {-2}] "
-        "with $r$ is the ``element_size_ratio``.",
+        r"If the default value of ``element_size_variable_name`` is "
+        r":math:`dx_0`, then "
+        r":math:`element_size_values= "
+        r"[dx_0 \times r, dx_0, dx_0 \times r ^ {-1}, dx_0 \times r ^ {-2}] "
+        r"with $r$ is the ``element_size_ratio``.",
     )
     element_size_values: list[float] = Field(
         default=[],
@@ -151,7 +155,7 @@ class SolutionVerificationSettings(CustomDOESettings):
         default=[],
         description="A list of output names to be added as output of the verification."
         "These are just observed outputs, and do not modify the solution "
-        "verififcation results."
+        "verification results."
         "If left to default value, observe all outputs except "
         "``MetaDataNames.error_code``, `job_directory`, "
         "`date`.",
@@ -170,6 +174,11 @@ class SolutionVerificationSettings(CustomDOESettings):
         description="The name of the variable versus which the convergence "
         "analysis is performed. If left to default value, the "
         "element_size_variable_name is used.",
+    )
+    simulated_data: Dataset | DataFrame | None = Field(
+        default=None,
+        description="The simulated data, containing the abscissa name "
+        "and the output name.",
     )
     description: CASE_DESCRIPTION_TYPE | None = None
 
@@ -192,7 +201,7 @@ class DiscretizationSolutionVerification(BaseVerification):
 
     _INPUTS = SolutionVerificationInputs
 
-    _SETTINGS = StreamlitSolutionVerificationSettings
+    _SETTINGS = SolutionVerificationSettings
 
     _STREAMLIT_SETTINGS = StreamlitSolutionVerificationSettings
 
@@ -232,10 +241,10 @@ class DiscretizationSolutionVerification(BaseVerification):
         model = options["model"]
         element_size_variable_name = options["element_size_variable_name"]
 
-        self.result._fill_metadata(options["description"], options["model"].description)
+        self.result._fill_metadata(
+            options["description"], options["model"].description if model else ""
+        )
         self._output_names = [output_name]
-        # TODO useless since already stored in metadata.settings
-        self.result.metadata.misc["output_name"] = output_name
 
         abscissa_name = (
             element_size_variable_name
@@ -244,49 +253,67 @@ class DiscretizationSolutionVerification(BaseVerification):
         )
         self.result.metadata.misc["element_size_variable_name"] = f"{abscissa_name}"
 
-        element_size_ratio = options["element_size_ratio"]
-        if element_size_ratio is not None:
-            dx_0 = model.default_input_data[element_size_variable_name]
-            element_size_values = dx_0 * array([
-                element_size_ratio,
-                1.0,
-                element_size_ratio ** (-1),
-                element_size_ratio ** (-2),
-            ])
-        else:
-            element_size_values = array(options["element_size_values"])
+        if options["simulated_data"] is None:
+            element_size_ratio = options["element_size_ratio"]
+            if element_size_ratio is not None:
+                dx_0 = model.default_input_data[element_size_variable_name]
+                element_size_values = dx_0 * array([
+                    element_size_ratio,
+                    1.0,
+                    element_size_ratio ** (-1),
+                    element_size_ratio ** (-2),
+                ])
+            else:
+                element_size_values = array(options["element_size_values"])
 
-        input_dataset = Dataset.from_array(
-            data=element_size_values,
-            variable_names=[element_size_variable_name],
-            variable_names_to_group_names={
-                element_size_variable_name: IODataset.INPUT_GROUP
-            },
-        )
-        doe_tool = self._subtools["CustomDOETool"]
-        metadata_variables_except_cpu_time = [
-            var for var in model.get_metadata_names() if var != MetaDataNames.cpu_time
-        ]
-        if len(options["observed_output_names"]) > 0:
-            output_names = options["observed_output_names"] + [output_name]
-        else:
-            output_names = [
-                name
-                for name in model.get_output_data_names()
-                if name not in metadata_variables_except_cpu_time
+            input_dataset = Dataset.from_array(
+                data=element_size_values,
+                variable_names=[element_size_variable_name],
+                variable_names_to_group_names={
+                    element_size_variable_name: IODataset.INPUT_GROUP
+                },
+            )
+            doe_tool = self._subtools["CustomDOETool"]
+            metadata_variables_except_cpu_time = [
+                var
+                for var in model.get_metadata_names()
+                if var != MetaDataNames.cpu_time
             ]
-        doe_dataset = doe_tool.execute(
-            model=model,
-            input_dataset=input_dataset,
-            output_names=output_names,
-        ).dataset
+            if len(options["observed_output_names"]) > 0:
+                output_names = options["observed_output_names"] + [
+                    output_name,
+                    MetaDataNames.cpu_time,
+                ]
+            else:
+                output_names = [
+                    name
+                    for name in model.get_output_data_names()
+                    if name not in metadata_variables_except_cpu_time
+                ]
+            doe_dataset = doe_tool.execute(
+                model=model,
+                input_dataset=input_dataset,
+                output_names=output_names,
+            ).dataset
+            nb_meshes = self.__NB_MESHES
+        else:
+            doe_dataset = (
+                options["simulated_data"]
+                if isinstance(options["simulated_data"], Dataset)
+                else Dataset.from_dataframe(options["simulated_data"])
+            )
+            element_size_values = (
+                doe_dataset.get_view(variable_names=abscissa_name).to_numpy().ravel()
+            )
+            nb_meshes = len(element_size_values)
+
         h = doe_dataset.get_view(variable_names=abscissa_name).to_numpy().ravel()
         q = doe_dataset.get_view(variable_names=output_name).to_numpy().ravel()
         if options["analysis"] == Analysis.N_DOF:
             h = h[0] / h
 
         resampler = cross_validation.CrossValidation(
-            arange(self.__NB_MESHES), n_folds=self.__NB_MESHES
+            arange(nb_meshes), n_folds=nb_meshes
         )
         # "fold_0" corresponds to the fold of the three finest meshes.
         cross_validation_result = {}
@@ -317,13 +344,13 @@ class DiscretizationSolutionVerification(BaseVerification):
             beta_extrap_array, cross_validation_result["fold_0"]["beta"]
         )
         gci_fine, gci_fine_error_band = compute_gci(
-            self.__FS, h, q, beta_extrap_final, self.__NB_MESHES - 2
+            self.__FS, h, q, beta_extrap_final, nb_meshes - 2
         )
         gci_fine_1, gci_fine_1_error_band = compute_gci(
-            self.__FS, h, q, 1, self.__NB_MESHES - 2
+            self.__FS, h, q, 1, nb_meshes - 2
         )
         gci_fine_2, gci_fine_2_error_band = compute_gci(
-            self.__FS, h, q, 2, self.__NB_MESHES - 2
+            self.__FS, h, q, 2, nb_meshes - 2
         )
         gci_coarse, gci_coarse_error_band = compute_gci(
             self.__FS, h, q, beta_extrap_final, 0
@@ -345,11 +372,11 @@ class DiscretizationSolutionVerification(BaseVerification):
             # Relative Discretization Error (Roy 2004), from coarse to fine grid.
             "rde": [
                 compute_rde(self.__FS, h, q, q_extrap_final, beta, i)[0]
-                for i in range(self.__NB_MESHES - 1)
+                for i in range(nb_meshes - 1)
             ][::-1],
             # RDE-based error band for the two coarsest grids.
             "rde_error_band": compute_rde(
-                self.__FS, h, q, q_extrap_final, beta, self.__NB_MESHES - 2
+                self.__FS, h, q, q_extrap_final, beta, nb_meshes - 2
             )[1],
         }
 
@@ -357,7 +384,7 @@ class DiscretizationSolutionVerification(BaseVerification):
         reference_data = Dataset.from_array(
             data=vstack([
                 element_size_values,
-                full((self.__NB_MESHES), q_extrap_final),
+                full((nb_meshes), q_extrap_final),
             ]).T,
             variable_names=[
                 abscissa_name,
@@ -411,16 +438,19 @@ class DiscretizationSolutionVerification(BaseVerification):
 
         Args:
             result: The verification result to visualize.
-            working_directory: The directory where plots are written.
             file_format: The format to which plots are generated.
         """
         figs = {}
         plots = [
             ConvergenceCrossValidation(),
             ErrorVersusElementSize(),
-            RelativeErrorVersusCpuTime(),
             RelativeErrorVersusElementSize(),
         ]
+        if MetaDataNames.cpu_time in result.simulation_and_reference.get_variable_names(
+            group_name=IODataset.OUTPUT_GROUP
+        ):
+            plots.append(RelativeErrorVersusCpuTime())
+
         for plot in plots:
             plot.working_directory = (
                 self.working_directory if directory_path == "" else Path(directory_path)

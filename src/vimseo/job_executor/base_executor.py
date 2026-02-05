@@ -29,8 +29,8 @@ from typing import ClassVar
 import jinja2
 from docstring_inheritance import GoogleDocstringInheritanceMeta
 
-from vimseo.job_executor.base_job_options import BaseJobOptions
-from vimseo.job_executor.base_user_job_options import BaseUserJobOptions
+from vimseo.job_executor.base_job_options import BaseJobSettings
+from vimseo.job_executor.base_user_job_options import BaseUserJobSettings
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -61,7 +61,7 @@ class BaseJobExecutor(metaclass=GoogleDocstringInheritanceMeta):
     _convergence_log_length: int
     """The current number of lines of the convergence log."""
 
-    _job_options: BaseJobOptions | None
+    _job_options: BaseJobSettings | None
     """The full job options.
 
     Except the user job options, they are only known at model execution.
@@ -79,10 +79,10 @@ class BaseJobExecutor(metaclass=GoogleDocstringInheritanceMeta):
     _IS_BLOCKING_SUBPROCESS = False
     """Whether the subprocess running the command is blocking."""
 
-    _JOB_OPTIONS_MODEL: ClassVar[BaseJobOptions] = BaseJobOptions
+    _JOB_OPTIONS_MODEL: ClassVar[BaseJobSettings] = BaseJobSettings
     """The pydantic model of the job options."""
 
-    _USER_JOB_OPTIONS_MODEL: ClassVar[BaseUserJobOptions] = BaseUserJobOptions
+    _USER_JOB_OPTIONS_MODEL: ClassVar[BaseUserJobSettings] = BaseUserJobSettings
     """The pydantic model of the user job options."""
 
     def __init__(self, command_template: str):
@@ -112,7 +112,7 @@ class BaseJobExecutor(metaclass=GoogleDocstringInheritanceMeta):
             self._command_line.split(), check_subprocess
         )
 
-    def set_options(self, options: BaseUserJobOptions):
+    def set_options(self, options: BaseUserJobSettings):
         if not isinstance(options, self._USER_JOB_OPTIONS_MODEL):
             msg = f"options must be of type {self._USER_JOB_OPTIONS_MODEL}"
             raise TypeError(msg)

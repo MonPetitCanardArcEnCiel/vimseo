@@ -29,16 +29,3 @@ class ReaderToolsFactory(BaseFactory):
 
     _CLASS = BaseReaderFile
     _PACKAGE_NAMES = ("vimseo.tools.io",)
-
-    def create(
-        self,
-        name: str,
-        **options,
-    ) -> BaseReaderFile:
-        """Create a reader tool.
-
-        Args:
-            name: The name of the reader tool (its class name).
-            **options: The options of the reader tool.
-        """
-        return super().create(name, **options)

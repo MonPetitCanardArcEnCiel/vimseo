@@ -62,6 +62,8 @@ ignore = [
     "PERF203",
     # Add / to signature for positional-only arguments
     "PYI063",
+    # "module should only contain docstrings and re-exports"
+    "RUF067",
 ]
 
 select = [
@@ -150,10 +152,13 @@ runtime-evaluated-base-classes = [
     "vimseo.core.model_description.BaseDescription",
     "vimseo.tools.base_metadata.BaseMetadata",
     "vimseo.tools.io.reader_file_dataframe.ReaderFileDataFrameSettings",
-    "vimseo.tools.doe.custom_doe.CustomDOESettings",
     "vimseo.tools.doe.doe.DOESettings",
     "vimseo.tools.space.space_tool.SpaceInputs",
     "vimseo.config.base_configuration.BaseConfiguration",
+    "vimseo.storage_management.archive_settings.BaseArchiveSettings",
+    "vimseo.tools.doe.custom_doe.CustomDOESettings",
+    "vimseo.tools.verification.verification_result.VerificationResult",
+    "vimseo.tools.verification.verification_result.SolutionVerificationResult",
 ]
 
 [lint.isort]

@@ -23,8 +23,8 @@ from numpy import atleast_1d
 
 from vimseo.core.base_component import BaseComponent
 from vimseo.core.base_integrated_model import IntegratedModel
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.components.component_factory import ComponentFactory
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.problems.mock.mock_fields.fields import MOCK_FIELDS_DIR
 
 if TYPE_CHECKING:

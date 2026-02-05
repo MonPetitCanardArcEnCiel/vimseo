@@ -93,6 +93,9 @@ class ConvergenceCrossValidation(Plotter):
             "fold_1": "red",
             "fold_2": "black",
             "fold_3": "green",
+            "fold_4": "orange",
+            "fold_5": "magenta",
+            "fold_6": "cyan",
         }
         if result.metadata.misc["element_size_variable_name"] == "degrees_of_freedom":
             element_size_variable_name = _DOF_ABSCISSA_NAME
@@ -100,7 +103,7 @@ class ConvergenceCrossValidation(Plotter):
             element_size_variable_name = result.metadata.misc[
                 "element_size_variable_name"
             ]
-        output_name = result.metadata.misc["output_name"]
+        output_name = result.metadata.settings["output_name"]
         fig.add_traces(
             go.Scatter(
                 x=[0.0],
@@ -173,14 +176,12 @@ class ErrorVersusElementSize(Plotter):
     """A line plot showing the error between the output values and the Richardson
     extrapolation, versus the element size."""
 
-    __NB_MESHES = 4
-
-    def __compute_reference_lines_offset(self, y_data, x_data, cv_order):
-        y_ref = y_data[self.__NB_MESHES - 1]
+    def __compute_reference_lines_offset(self, y_data, x_data, cv_order, nb_meshes):
+        y_ref = y_data[nb_meshes - 1]
         return (
-            y_ref / x_data[self.__NB_MESHES - 1] ** cv_order
+            y_ref / x_data[nb_meshes - 1] ** cv_order
             if not isnan(y_ref)
-            else 1.0 / x_data[self.__NB_MESHES - 1] ** cv_order
+            else 1.0 / x_data[nb_meshes - 1] ** cv_order
         )
 
     @BaseTool.validate
@@ -193,8 +194,9 @@ class ErrorVersusElementSize(Plotter):
     ):
         df = result.element_wise_metrics.copy()
         df.columns = result.element_wise_metrics.get_columns()
+        nb_meshes = df.shape[0]
         df["median_absolute_deviation"] = full(
-            (self.__NB_MESHES), result.extrapolation["q_extrap_mad"]
+            (nb_meshes), result.extrapolation["q_extrap_mad"]
         )
         if result.metadata.misc["element_size_variable_name"] == "degrees_of_freedom":
             element_size_variable_name = _DOF_ABSCISSA_NAME
@@ -202,7 +204,7 @@ class ErrorVersusElementSize(Plotter):
             element_size_variable_name = result.metadata.misc[
                 "element_size_variable_name"
             ]
-        output_name = result.metadata.misc["output_name"]
+        output_name = result.metadata.settings["output_name"]
 
         fig = Figure()
         fig.add_traces(
@@ -218,10 +220,10 @@ class ErrorVersusElementSize(Plotter):
             [1, 2],
             [
                 self.__compute_reference_lines_offset(
-                    df[output_name], df[element_size_variable_name], 1
+                    df[output_name], df[element_size_variable_name], 1, nb_meshes
                 ),
                 self.__compute_reference_lines_offset(
-                    df[output_name], df[element_size_variable_name], 2
+                    df[output_name], df[element_size_variable_name], 2, nb_meshes
                 ),
             ],
             ["green", "black"],
@@ -265,7 +267,7 @@ class RelativeErrorVersusCpuTime(Plotter):
     ):
         df = result.simulation_and_reference.copy()
         df.columns = result.simulation_and_reference.get_columns()
-        output_name = result.metadata.misc["output_name"]
+        output_name = result.metadata.settings["output_name"]
         df["relative_error"] = (
             df[output_name] - result.extrapolation["q_extrap"]
         ) / result.extrapolation["q_extrap"]
@@ -312,7 +314,7 @@ class RelativeErrorVersusElementSize(Plotter):
     ):
         df = result.simulation_and_reference.copy()
         df.columns = result.simulation_and_reference.get_columns()
-        output_name = result.metadata.misc["output_name"]
+        output_name = result.metadata.settings["output_name"]
         df["relative_error"] = (
             df[output_name] - result.extrapolation["q_extrap"]
         ) / result.extrapolation["q_extrap"]

@@ -30,7 +30,7 @@ from numpy import atleast_1d
 from vimseo import EXAMPLE_RUNS_DIR_NAME
 from vimseo.api import activate_logger
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.io.space_io import SpaceToolFileIO
 from vimseo.storage_management.base_storage_manager import PersistencyPolicy
 from vimseo.tools.calibration.calibration_step import CalibrationStep
@@ -89,9 +89,9 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/calibration_scalars",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/calibration_scalars",
-        cache_file_path=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/caches/calibration_scalars/{model_name}_{load_case}_cache.hdf",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/calibration_scalars",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/calibration_scalars",
+        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/calibration_scalars/{model_name}_{load_case}_cache.hdf",
     ),
 )
 

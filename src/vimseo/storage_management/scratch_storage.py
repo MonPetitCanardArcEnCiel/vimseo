@@ -17,41 +17,17 @@ from __future__ import annotations
 
 import logging
 import shutil
-from pathlib import Path
-
-from pydantic import Field
+from typing import TYPE_CHECKING
 
 from vimseo.core.model_metadata import MetaDataNames
 from vimseo.storage_management.base_storage_manager import BaseStorageManager
-from vimseo.storage_management.base_storage_manager import PersistencyPolicy
-from vimseo.tools.base_settings import BaseSettings
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from vimseo.storage_management.base_storage_manager import PersistencyPolicy
 
 LOGGER = logging.getLogger(__name__)
-
-
-class DirectoryScratchOptions(BaseSettings):
-    """The options of the ``IntegratedModel`` constructor."""
-
-    directory_scratch_root: Path | str = Field(
-        default="default_scratch/",
-        description="Path to the scratch root directory, "
-        "wherein unique directories will be created to perform job "
-        "executions, and possibly store the temporary scratch files."
-        "Default value is './default_scratch'.",
-    )
-
-    job_name: str = Field(
-        default="",
-        description="The name of the job, used for directory and files naming in the "
-        "scratch and archive. By default, the job name is generated as a "
-        "unique ID.",
-    )
-
-    directory_scratch_persistency: PersistencyPolicy = Field(
-        default=PersistencyPolicy.DELETE_IF_SUCCESSFUL,
-        description="Whether to delete the scratch job directory after "
-        "post-processing.",
-    )
 
 
 class DirectoryScratch(BaseStorageManager):
@@ -70,6 +46,11 @@ class DirectoryScratch(BaseStorageManager):
         self._experiment_name = f"./{model_name}/{load_case_name}/"
         self._accept_overwrite_job_dir = True
         self._job_directory = ""
+
+    @property
+    def root_directory(self) -> str:
+        """The root directory where results are stored."""
+        return str(self._root_directory.absolute())
 
     def create_job_directory(self):
         """Create a new job directory."""

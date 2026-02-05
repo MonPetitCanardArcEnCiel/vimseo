@@ -51,14 +51,14 @@ if TYPE_CHECKING:
 LOGGER = logging.getLogger(__name__)
 
 
-class ToolConstructorOptions(BaseSettings):
+class ToolConstructorSettings(BaseSettings):
     name: str = ""
     root_directory: str | Path = config.root_directory
     directory_naming_method: DirectoryNamingMethod = DirectoryNamingMethod.NUMBERED
     working_directory: str | Path = config.working_directory
 
 
-class StreamlitToolConstructorOptions(ToolConstructorOptions):
+class StreamlitToolConstructorSettings(ToolConstructorSettings):
     root_directory: str = config.root_directory
     directory_naming_method: str = DirectoryNamingMethod.UUID
     working_directory: str = config.working_directory
@@ -69,7 +69,7 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
 
     The tool options can be checked versus a grammar.
     Option checking is enable through :attr:`_HAS_OPTION_CHECK`.
-    Options can be passed at construction or through :meth:`~.execute`.
+    Settings can be passed at construction or through :meth:`~.execute`.
     The tool result can be written on disk, and then loaded.
     In the example below, ``Tool`` should be replaced by an available tool.
 
@@ -122,7 +122,7 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
 
     RESULT_SUFFIX: ClassVar[str] = "_result"
 
-    _STREAMLIT_CONSTRUCTOR_OPTIONS = StreamlitToolConstructorOptions
+    _STREAMLIT_CONSTRUCTOR_OPTIONS = StreamlitToolConstructorSettings
 
     def __init__(
         self,
@@ -146,7 +146,7 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
                 value.
             name: The name of the tool. By default, it is the class name.
         """
-        options = ToolConstructorOptions(
+        options = ToolConstructorSettings(
             root_directory=root_directory,
             directory_naming_method=directory_naming_method,
             working_directory=working_directory,
@@ -155,7 +155,7 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
         self.name = (
             self.__class__.__name__ if options["name"] == "" else options["name"]
         )
-        options = ToolConstructorOptions(**options).model_dump()
+        options = ToolConstructorSettings(**options).model_dump()
         self.time = datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
         self.result = BaseResult()
         self.report_name = f"{self.__class__.__name__} Report"
@@ -185,10 +185,10 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
                     self._opt_grammar = deepcopy(self._SETTINGS)
                 else:
 
-                    class Options(self._INPUTS, self._SETTINGS):
+                    class Settings(self._INPUTS, self._SETTINGS):
                         """The options of the tool."""
 
-                    self._opt_grammar = deepcopy(Options)
+                    self._opt_grammar = deepcopy(Settings)
             elif self._INPUTS is not None:
                 self._opt_grammar = deepcopy(self._INPUTS)
 
@@ -266,7 +266,7 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
             schema_file = join(comp_dir, f"{name}.json")  # noqa: PTH118
             if not Path(schema_file).exists():
                 msg = (
-                    "Options grammar for {} tool json schema does not exist, "
+                    "Settings grammar for {} tool json schema does not exist, "
                     "expected: {}".format(cls_name, join(comp_dir, name + ".json"))  # noqa: PTH118
                 )
                 raise ValueError(msg)
@@ -332,6 +332,8 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
                     msg = f"Settings must be of type {self._SETTINGS}."
                     raise TypeError(msg)
                 self._options = options["settings"].model_dump()
+                if self._INPUTS is not None:
+                    self._options.update(self._INPUTS().model_dump())
                 if "inputs" in options:
                     if not isinstance(options["inputs"], self._INPUTS):
                         msg = f"Inputs must be of type {self._INPUTS}."
@@ -339,6 +341,8 @@ class BaseTool(metaclass=GoogleDocstringInheritanceMeta):
                     self._options.update(options["inputs"].model_dump())
             elif "inputs" in options:
                 self._options.update(options["inputs"].model_dump())
+                if self._SETTINGS is not None:
+                    self._options.update(self._SETTINGS().model_dump())
             else:
                 self._options = self._opt_grammar(**self._options).model_dump()
 

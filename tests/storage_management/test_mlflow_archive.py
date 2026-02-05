@@ -21,8 +21,8 @@ from numpy.core.shape_base import atleast_1d
 from numpy.testing import assert_array_equal
 
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.model_metadata import MetaDataNames
+from vimseo.core.model_settings import IntegratedModelSettings
 
 
 def test_result_decoding(tmp_wd):

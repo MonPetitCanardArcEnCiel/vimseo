@@ -36,7 +36,8 @@ from vimseo.utilities.curves import Curve
 from vimseo.utilities.fields import Field
 
 if TYPE_CHECKING:
-    from statsmodels.base.data import ModelData
+    from vimseo.core.base_integrated_model import IntegratedModel
+    from vimseo.storage_management.base_archive_storage import ModelDataType
 
 ScalarDataType = Mapping[str, float | int | str]
 
@@ -58,7 +59,13 @@ class ModelResult(BaseResult):
     #  representing time
 
     @classmethod
-    def from_data(cls, model_data: ModelData, load_fields: bool = False) -> ModelResult:
+    def from_data(
+        cls,
+        model_data: ModelDataType,
+        model: IntegratedModel | None = None,
+        load_fields: bool = False,
+    ) -> ModelResult:
+        """Create a ModelResult from raw model data."""
 
         archive_manager = DirectoryArchive(
             PersistencyPolicy.DELETE_ALWAYS,
@@ -66,22 +73,25 @@ class ModelResult(BaseResult):
             "",
         )
         archive_result = archive_manager._prepare_archive_result(model_data)
-        model = create_model(
-            archive_result["metadata"]["model"], archive_result["metadata"]["load_case"]
+        model = (
+            model
+            if model is not None
+            else create_model(
+                archive_result["metadata"]["model"],
+                archive_result["metadata"]["load_case"],
+            )
         )
         result = ModelResult()
         result.metadata.model = model.description
         for name in MetaDataNames:
             result.metadata.report[name] = archive_result["metadata"][name]
+        data = dict(archive_result["inputs"], **archive_result["outputs"])
         for variables in model.curves:
             curve = Curve({
-                variables[0]: archive_result["outputs"][variables[0]],
-                variables[1]: archive_result["outputs"][variables[1]],
+                variables[0]: data[variables[0]],
+                variables[1]: data[variables[1]],
             })
             result.curves.append(curve)
-        data = {}
-        data.update(archive_result["inputs"])
-        data.update(archive_result["outputs"])
         for variable_names in data:
             if variable_names not in [
                 name for curve_names in model.curves for name in curve_names
@@ -118,7 +128,9 @@ class ModelResult(BaseResult):
             return []
         return curves[0]
 
-    def get_numeric_scalars(self, variable_names: Iterable[str] = ()):
+    def get_numeric_scalars(
+        self, variable_names: Iterable[str] = ()
+    ) -> Mapping[str, Number]:
         variable_names = (
             list(self.scalars.keys()) if len(variable_names) == 0 else variable_names
         )

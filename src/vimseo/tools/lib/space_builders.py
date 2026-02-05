@@ -310,8 +310,8 @@ class FromModelMinAndMax(FromMinAndMax):
         )
         if not set(variable_names).issubset(input_names):
             msg = (
-                f"Variables {variable_names} cannot be used since lower "
-                f"and upper bounds are not defined for all these variables."
+                f"Some variables among {variable_names} are not model inputs, or have no "
+                f"lower and upper bounds."
             )
             raise ValueError(msg)
         input_names = set(input_names & set(variable_names))
@@ -489,15 +489,14 @@ class FromModelCenterAndCov(FromCenterAndCov):
 
         if use_default_values_as_center:
             input_names = set(model.default_input_data.keys())
+            msg = "no default value"
         else:
             input_names = set(
                 set(model.lower_bounds.keys()) & set(model.upper_bounds.keys())
             )
+            msg = "no lower and upper bounds"
         if not set(variable_names).issubset(input_names):
-            msg = (
-                f"Variables {variable_names} cannot be used since lower "
-                f"and upper bounds are not defined for all these variables."
-            )
+            msg = f"Some variables among {variable_names} are not model inputs, or have {msg}."
             raise ValueError(msg)
         input_names = set(input_names & set(variable_names))
 

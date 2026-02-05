@@ -17,7 +17,7 @@ import logging
 from vimseo import EXAMPLE_RUNS_DIR_NAME
 from vimseo.api import activate_logger
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.problems.beam_analytic.reference_dataset_builder import (
     bending_test_analytical_reference_dataset,
 )
@@ -39,9 +39,9 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/validation_case",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/validation_case",
-        cache_file_path=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/caches/validation_case/{model_name}_{load_case}.hdf",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/validation_case",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/validation_case",
+        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/validation_case/{model_name}_{load_case}.hdf",
     ),
 )
 

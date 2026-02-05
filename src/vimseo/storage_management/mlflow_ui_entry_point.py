@@ -22,7 +22,7 @@ from vimseo.storage_management.archive_settings import DEFAULT_ARCHIVE_ROOT
 
 
 def main() -> None:
-    if config.database_mode == "Local":
+    if config.database.mode == "Local":
         command = [
             "mlflow",
             "ui",
@@ -31,7 +31,7 @@ def main() -> None:
         ]
         print(f"Run command: {' '.join(command)}")
     else:
-        print(f"Browse {config.database.uri_team} to open database interface.")
+        print(f"Browse {config.database.team_uri} to open database interface.")
 
 
 if __name__ == "__main__":

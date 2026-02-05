@@ -32,12 +32,12 @@ from gemseo.utils.metrics.metric_factory import MetricFactory
 from vimseo.config.global_configuration import _configuration as configuration
 from vimseo.core.load_case_factory import LoadCaseFactory
 from vimseo.core.model_factory import ModelFactory
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.tools.post_tools.plot_factory import PlotFactory
 from vimseo.tools.tools_factory import ToolsFactory
 
 if TYPE_CHECKING:
     from vimseo.core.base_integrated_model import IntegratedModel
-    from vimseo.core.base_integrated_model import IntegratedModelSettings
 
 LOGGER = logging.getLogger(__name__)
 
@@ -95,7 +95,11 @@ def get_available_load_cases(model_name: str) -> list[str]:
     matching_load_case_names = []
     for load_case_name in load_case_names:
         try:
-            create_model(model_name, load_case_name)
+            create_model(
+                model_name,
+                load_case_name,
+                IntegratedModelSettings(archive_manager="DirectoryArchive"),
+            )
             matching_load_case_names.append(load_case_name)
         except (ImportError, AttributeError):
             continue
@@ -146,14 +150,14 @@ def get_available_tools():
     return class_names
 
 
-def show_config():
+def print_config():
     """Returns: representation of the current configuration variables."""
     LOGGER.info(configuration.model_dump())
 
 
-def get_config_help() -> str:
+def print_config_help():
     """Return the help about configuration file."""
-    return configuration.model_fields
+    LOGGER.info(configuration.model_fields)
 
 
 activate_logger()

@@ -16,17 +16,3 @@
 """Core classes : Integrated model, Design value, Calibration, Validity domain."""
 
 from __future__ import annotations
-
-import logging
-import os
-
-import matplotlib
-
-LOGGER = logging.getLogger(__name__)
-
-# To be used for Jenkins which has no display, otherwise graphs export
-# wont work
-NO_DISPLAY = os.environ.get("NO_DISPLAY")
-if NO_DISPLAY == "True":
-    LOGGER.warning("Use 'Agg' in matplotlib prevents from displaying windows")
-    matplotlib.use("Agg")

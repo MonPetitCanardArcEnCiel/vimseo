@@ -28,6 +28,7 @@ from gemseo.mlearning import MinMaxScaler
 from numpy import array
 from numpy import inf
 from numpy import ndarray
+from pandas import DataFrame
 from pydantic import BaseModel
 
 if TYPE_CHECKING:
@@ -39,7 +40,9 @@ if TYPE_CHECKING:
 LOGGER = logging.getLogger(__name__)
 
 
-def load_input_bounds(grammar: JSONGrammar) -> tuple[Mapping[str, Number]]:
+def load_input_bounds(
+    grammar: JSONGrammar,
+) -> tuple[Mapping[str, Number | list[Number]]]:
     """Return minimum and maximum bounds for variables of type ``array[number]`` in a
     JSON grammar.
 
@@ -122,6 +125,8 @@ class EnhancedJSONEncoder(json.JSONEncoder):
             return str(o)
         if isinstance(o, np.bool_):
             return bool(o)
+        if isinstance(o, DataFrame):
+            return o.to_string()
 
         return super().default(o)
 

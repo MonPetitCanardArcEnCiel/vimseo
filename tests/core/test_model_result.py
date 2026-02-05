@@ -26,9 +26,9 @@ from pandas import DataFrame
 from pandas._testing import assert_frame_equal
 
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.model_metadata import MetaDataNames
 from vimseo.core.model_result import ModelResult
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.storage_management.base_storage_manager import PersistencyPolicy
 from vimseo.utilities.curves import Curve
 from vimseo.utilities.plotting_utils import plot_curves

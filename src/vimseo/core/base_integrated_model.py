@@ -39,29 +39,27 @@ from gemseo.core.chains.chain import MDOChain
 from gemseo.core.discipline.base_discipline import CacheType
 from gemseo.core.discipline.discipline import Discipline
 from gemseo.core.execution_status import ExecutionStatus
+from gemseo.core.grammars.json_grammar import JSONGrammar
 from gemseo.datasets.dataset import Dataset
 from gemseo.post.dataset.scatter_plot_matrix import ScatterMatrix
 from matplotlib.image import imread
 from matplotlib.pyplot import imshow
 from numpy import array
 from numpy import asarray
+from numpy import inf
 from pandas import DataFrame
-from pydantic import ConfigDict
-from pydantic import Field
 from strenum import StrEnum
 
-from vimseo.config.global_configuration import _configuration as config
 from vimseo.core.gemseo_discipline_wrapper import GemseoDisciplineWrapper
 from vimseo.core.load_case_factory import LoadCaseFactory
 from vimseo.core.model_description import ModelDescription
 from vimseo.core.model_metadata import DEFAULT_METADATA
 from vimseo.core.model_metadata import MetaData
 from vimseo.core.model_metadata import MetaDataNames
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.material.material import Material
 from vimseo.storage_management import NAME_TO_ARCHIVE_CLASS
-from vimseo.storage_management.archive_settings import BaseArchiveSettings
 from vimseo.storage_management.scratch_storage import DirectoryScratch
-from vimseo.storage_management.scratch_storage import DirectoryScratchOptions
 from vimseo.utilities.json_grammar_utils import load_input_bounds
 from vimseo.utilities.plotting_utils import plot_curves
 
@@ -78,22 +76,6 @@ if TYPE_CHECKING:
     from vimseo.storage_management.directory_storage import DirectoryArchive
 
 LOGGER = logging.getLogger(__name__)
-
-
-class IntegratedModelSettings(BaseArchiveSettings, DirectoryScratchOptions):
-    """The options of the ``IntegratedModel`` constructor."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    check_subprocess: bool = Field(
-        default=False,
-        description="Whether to raise an error if a subprocess of a model component "
-        "fails",
-    )
-
-    cache_file_path: str | Path = ""
-
-    archive_manager: str = config.archive_manager
 
 
 class IntegratedModel(GemseoDisciplineWrapper):
@@ -293,8 +275,8 @@ class IntegratedModel(GemseoDisciplineWrapper):
         output_names = self._chain.disciplines[-1].output_grammar.names
         self._chain.output_grammar.restrict_to(output_names)
 
-        self.input_grammar = deepcopy(self._chain.disciplines[0].input_grammar)
-        self.default_input_data.update(self._chain.disciplines[0].default_input_data)
+        self.input_grammar = deepcopy(self._chain.input_grammar)
+        self.default_input_data = self._chain.default_input_data
         for name in self.input_grammar.names:
             self.input_grammar.required_names.add(name)
 
@@ -321,10 +303,18 @@ class IntegratedModel(GemseoDisciplineWrapper):
         # TODO check if integration of jacobian is correct
         self._set_differentiated_names(self._chain.disciplines[0])
 
-        self.input_space = {}
-        self.lower_bounds, self.upper_bounds, self.input_space = load_input_bounds(
-            self.input_grammar
-        )
+        if isinstance(self._chain.disciplines[0].input_grammar, JSONGrammar):
+            self.lower_bounds, self.upper_bounds, self.input_space = load_input_bounds(
+                self._chain.disciplines[0].input_grammar
+            )
+        else:
+            self.input_space = {}
+            self.lower_bounds = {}
+            self.upper_bounds = {}
+            for name in self._chain.disciplines[0].input_grammar.names:
+                self.lower_bounds[name] = [-inf]
+                self.upper_bounds[name] = [inf]
+                self.input_space[name] = [-inf, inf]
 
         # Set status to DONE, to avoid being locked in FAILED mode.
         self.execution_status.value = ExecutionStatus.Status.DONE
@@ -444,8 +434,16 @@ class IntegratedModel(GemseoDisciplineWrapper):
 
         if self._whether_use_scratch_dir():
             self._scratch_manager.create_job_directory()
+            LOGGER.info(
+                f"Current root directory of scratch directory is "
+                f"{self._scratch_manager.root_directory}."
+            )
 
         self._archive_manager.create_job_directory()
+        LOGGER.info(
+            f"Current root directory of job directory is "
+            f"{self._archive_manager.root_directory}."
+        )
 
         for discipline in self._chain.disciplines:
             discipline._job_directory = self._scratch_manager.job_directory
@@ -548,10 +546,9 @@ class IntegratedModel(GemseoDisciplineWrapper):
         Args:
             directory_path: A path where to save the plots. Default is current working
                 directory.
-            fig_id: an ID for the generated figure. It can be useful to avoid overriding
-                figures, by incrementing the value.
             save: Whether to save the plot.
             show: Whether to show the plot.
+            scalar_names: The scalars to plot in a scatter matrix. Show all scalars by default.
 
         Returns:
         """
@@ -559,12 +556,14 @@ class IntegratedModel(GemseoDisciplineWrapper):
         if not directory_path.exists():
             directory_path.mkdir(parents=True)
 
+        LOGGER.info(f"Saving plots to {directory_path.absolute()}")
+
         from vimseo.core.model_result import ModelResult
 
-        result = ModelResult.from_data({
-            "inputs": self.get_input_data(),
-            "outputs": self.get_output_data(),
-        })
+        result = ModelResult.from_data(
+            {"inputs": self.get_input_data(), "outputs": self.get_output_data()},
+            model=self,
+        )
         figures = {}
         if data == "CURVES":
             for variables in self.curves:
@@ -598,6 +597,9 @@ class IntegratedModel(GemseoDisciplineWrapper):
                 save=False,
                 show=True,
             )
+        else:
+            msg = f"Unknown data type {data} for plotting."
+            raise ValueError(msg)
 
         return figures
 

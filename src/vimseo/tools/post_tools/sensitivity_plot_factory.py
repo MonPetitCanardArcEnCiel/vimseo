@@ -30,21 +30,3 @@ class SensitivityPlotFactory(BaseFactory):
 
     _CLASS = SensitivityPlot
     _PACKAGE_NAMES = ("vimseo.tools.post_tools",)
-
-    def create(
-        self,
-        sensitivity_plot_name: str,
-        **options,
-    ) -> SensitivityPlot:
-        """Create a sensitivity plot.
-
-        Args:
-            sensitivity_plot_name: The name of the sensitivity plots (its class name).
-            **options: The options of the sensitivity plots.
-        """
-        return super().create(sensitivity_plot_name, **options)
-
-    @property
-    def sensitivity_plots(self) -> list[str]:
-        """The names of the available sensitivity plots."""
-        return self.class_names

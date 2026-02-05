@@ -22,13 +22,13 @@ from pydantic import ConfigDict
 from pydantic import Field
 
 from vimseo.tools.base_tool import BaseTool
-from vimseo.tools.base_tool import StreamlitToolConstructorOptions
-from vimseo.tools.base_tool import ToolConstructorOptions
+from vimseo.tools.base_tool import StreamlitToolConstructorSettings
+from vimseo.tools.base_tool import ToolConstructorSettings
 
 LOGGER = logging.getLogger(__name__)
 
 
-class BaseCompositeToolConstructorOptions(ToolConstructorOptions):
+class BaseCompositeToolConstructorSettings(ToolConstructorSettings):
     """The options of the BaseCompositeTool constructor."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -38,7 +38,7 @@ class BaseCompositeToolConstructorOptions(ToolConstructorOptions):
     )
 
 
-class StreamlitBaseCompositeToolConstructorOptions(StreamlitToolConstructorOptions):
+class StreamlitBaseCompositeToolConstructorSettings(StreamlitToolConstructorSettings):
     """The options of the BaseCompositeTool constructor."""
 
     subtools: list = []  # noqa: RUF012
@@ -47,10 +47,10 @@ class StreamlitBaseCompositeToolConstructorOptions(StreamlitToolConstructorOptio
 class BaseCompositeTool(BaseTool):
     """A tool executing other tools."""
 
-    _STREAMLIT_CONSTRUCTOR_OPTIONS = StreamlitBaseCompositeToolConstructorOptions
+    _STREAMLIT_CONSTRUCTOR_OPTIONS = StreamlitBaseCompositeToolConstructorSettings
 
     def __init__(self, **options):
-        options = BaseCompositeToolConstructorOptions(**options).model_dump()
+        options = BaseCompositeToolConstructorSettings(**options).model_dump()
         self._subtools = {tool.name: tool for tool in options.pop("subtools")}
         super().__init__(**options)
 

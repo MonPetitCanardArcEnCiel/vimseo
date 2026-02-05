@@ -76,6 +76,15 @@ class BaseArchiveManager(BaseStorageManager):
         return self._persistent_file_names
 
     @property
+    def uri(self) -> str:
+        """The database root directory."""
+        return str(self._root_directory)
+
+    @property
+    def root_directory(self) -> str:
+        return ""
+
+    @property
     def experiment_name(self):
         """The name of the current experiment."""
         return self._experiment_name
@@ -84,36 +93,6 @@ class BaseArchiveManager(BaseStorageManager):
     def run_name(self):
         """The name of the current run."""
         return self._job_name
-
-    # # TODO use this in InputHandler
-    # @staticmethod
-    # def encode_model_data(
-    #     data: Mapping[str, ndarray]
-    # ) -> Mapping[str, ndarray | Number | str]:
-    #     """Encode a dictionary (inputs or outputs or metadata) from a ModelResult format,
-    #     to an ArchiveResult format, which is more user-friendly format for archiving.
-    #
-    #     Args:
-    #         data: dictionary to encode
-    #     Returns:
-    #         data: dictionary encoded
-    #     """
-    #     data = data.copy()
-    #
-    #     # de-capsulate useless arrays to scalars
-    #     # data = decapsulate_length_one_array(data)
-    #     for k in data.keys():
-    #         # TODO use better condition to check for sequence (see mlflow_tracking sandbox)
-    #         if hasattr(data[k], "__len__") and len(data[k]) == 1:
-    #             data[k] = data[k][0]
-    #
-    #     # cast original types into standard JSON serializable
-    #     for k in data.keys():
-    #         if isinstance(data[k], dict):
-    #             # recursivity on encapsulated dicts
-    #             data[k] = decapsulate_length_one_array(data[k])  # noqa : F821
-    #
-    #     return data
 
     def _prepare_archive_result(self, data: ModelDataType) -> ArchiveResultType:
         output_data = data["outputs"].copy()  # avoid mutable issues

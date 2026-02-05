@@ -356,9 +356,8 @@ class SpaceTool(BaseAnalysisTool):
     @classmethod
     def get_available_space_builders(cls):
         """The available :class:`.SpaceBuilder`."""
-        space_builders = SpaceBuilderFactory().space_builders
-        space_builders.remove("SpaceBuilder")
-        return space_builders
+        return SpaceBuilderFactory().class_names
+        # space_builders.remove("SpaceBuilder")
 
     def get_available_distributions(self):
         """The available distributions for the current space builder."""

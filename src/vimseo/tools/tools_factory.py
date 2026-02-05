@@ -31,35 +31,9 @@ class ToolsFactory(BaseFactory):
     _CLASS = BaseTool
     _PACKAGE_NAMES = ("vimseo.tools",)
 
-    def create(
-        self,
-        name: str,
-        **options,
-    ) -> BaseTool:
-        """Create an analysis tool.
-
-        Args:
-            name: The name of the analysis tool (its class name).
-            **options: The options of the analysis tool.
-        """
-        return super().create(name, **options)
-
 
 class AnalysisToolsFactory(ToolsFactory):
     """A factory to create analysis tools from a name or a class."""
 
     _CLASS = BaseAnalysisTool
     _PACKAGE_NAMES = ("vimseo.tools",)
-
-    def create(
-        self,
-        name: str,
-        **options,
-    ) -> BaseAnalysisTool:
-        """Create an analysis tool.
-
-        Args:
-            name: The name of the analysis tool (its class name).
-            **options: The options of the analysis tool.
-        """
-        return super().create(name, **options)

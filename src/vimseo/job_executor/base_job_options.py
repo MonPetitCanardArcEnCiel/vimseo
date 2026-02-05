@@ -17,13 +17,13 @@
 
 from __future__ import annotations
 
-from vimseo.job_executor.base_user_job_options import BaseUserJobOptions
+from vimseo.job_executor.base_user_job_options import BaseUserJobSettings
 
 
-class BaseJobOptions(BaseUserJobOptions):
+class BaseJobSettings(BaseUserJobSettings):
     """The options of a job execution.
 
-    They extend the user job options ``BaseUserJobOptions``
+    They extend the user job options ``BaseUserJobSettings``
     with options used internally, and that are known at model execution
     like the job directory.
     """

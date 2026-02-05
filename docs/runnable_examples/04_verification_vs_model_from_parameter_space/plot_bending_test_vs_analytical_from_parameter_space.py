@@ -22,7 +22,7 @@ from gemseo.utils.directory_creator import DirectoryNamingMethod
 from vimseo import EXAMPLE_RUNS_DIR_NAME
 from vimseo.api import activate_logger
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.tools.space.space_tool import SpaceTool
 from vimseo.tools.verification.verification_vs_model_from_parameter_space import (
     CodeVerificationAgainstModelFromParameterSpace,
@@ -65,8 +65,8 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/verification_vs_model",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/verification_vs_model",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/verification_vs_model",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/verification_vs_model",
     ),
 )
 model.cache = None
@@ -77,8 +77,8 @@ model_2 = create_model(
     "BendingTestAnalytical",
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/verification_vs_model_2nd_model",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/verification_vs_model_2nd_model",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/verification_vs_model_2nd_model",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/verification_vs_model_2nd_model",
     ),
 )
 model_2.cache = None

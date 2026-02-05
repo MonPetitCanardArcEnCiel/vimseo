@@ -29,16 +29,3 @@ class IOFactory(BaseFactory):
 
     _CLASS = BaseToolFileIO
     _PACKAGE_NAMES = ("vimseo.io",)
-
-    def create(
-        self,
-        name: str,
-        **options,
-    ) -> BaseToolFileIO:
-        """Create an analysis tool.
-
-        Args:
-            name: The name of the IO (its class name).
-            **options: The options of the IO.
-        """
-        return super().create(name, **options)

@@ -29,6 +29,7 @@ from vimseo.utilities.json_grammar_utils import EnhancedJSONEncoder
 
 if TYPE_CHECKING:
     from gemseo.datasets.dataset import Dataset
+    from pandas import DataFrame
 
     from vimseo.core.model_description import ModelDescription
 
@@ -118,3 +119,10 @@ class SolutionVerificationResult(VerificationResult):
         text.add("Cross validation on Richardson extrapolation:")
         text.add(repr(self.cross_validation))
         return str(text)
+
+
+class SolutionVerificationCaseResult(BaseResult):
+    """A result from a solution verification case."""
+
+    convergence_data: DataFrame | None = None
+    """A DataFrame containing the convergence data used for the verification."""

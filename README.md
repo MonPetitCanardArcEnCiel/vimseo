@@ -134,7 +134,7 @@ is sampled on 20 points with a Latin Hypercube.
 from __future__ import annotations
 
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.tools.doe.doe import DOEInputs
 from vimseo.tools.doe.doe import DOESettings
 from vimseo.tools.doe.doe import DOETool
@@ -252,7 +252,7 @@ and [API](https://sebastienbocquet.github.io/vimseo/reference/vimseo/)**: get th
 
 ## Learning **VIMSEO**
 
-- **[Tutorials](https://sebastienbocquet.github.io/vimseo/tutorials/vvuq_study/code_verification/)
+- **[Tutorials](https://sebastienbocquet.github.io/vimseo/tutorials/vvuq_study/intoduction/)
 and [Explanations](https://sebastienbocquet.github.io/vimseo/explanations/asme2025/abstract/)**:
 learn through discussions and tutorials about key topics.
 

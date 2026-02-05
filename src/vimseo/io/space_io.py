@@ -80,6 +80,7 @@ class SpaceToolFileIO(BaseToolFileIO):
         )
 
         parameter_space = ParameterSpace()
+
         for variable_name, options in data["parameter_space"].items():
             # TODO bad design: the kind of distribution interface is inferred
             #  from the option keys.

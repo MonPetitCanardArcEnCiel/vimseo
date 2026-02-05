@@ -21,7 +21,7 @@ from pandas import read_csv
 from vimseo import EXAMPLE_RUNS_DIR_NAME
 from vimseo.api import activate_logger
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.io.space_io import SpaceToolFileIO
 from vimseo.material.material import Material
 from vimseo.material_lib import MATERIAL_LIB_DIR
@@ -78,9 +78,9 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/validation_point",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/validation_point",
-        cache_file_path=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/caches/validation_point/{model_name}_{load_case}_cache.hdf",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/validation_point",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/validation_point",
+        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/validation_point/{model_name}_{load_case}_cache.hdf",
     ),
 )
 

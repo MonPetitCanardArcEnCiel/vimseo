@@ -29,21 +29,3 @@ class PlotFactory(BaseFactory):
 
     _CLASS = Plotter
     _PACKAGE_NAMES = ("vimseo.tools.post_tools",)
-
-    def create(
-        self,
-        plot_name: str,
-        **options,
-    ) -> Plotter:
-        """Create a validation plot.
-
-        Args:
-            plot_name: The name of the validation plot (its class name).
-            **options: The options of the validation plot.
-        """
-        return super().create(plot_name, **options)
-
-    @property
-    def plots(self) -> list[str]:
-        """The names of the available validation plots."""
-        return self.class_names

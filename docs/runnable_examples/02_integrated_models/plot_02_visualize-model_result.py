@@ -34,8 +34,8 @@ from pandas import concat
 from vimseo import EXAMPLE_RUNS_DIR_NAME
 from vimseo.api import activate_logger
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.model_result import ModelResult
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.utilities.plotting_utils import plot_curves
 
 activate_logger(level=logging.INFO)
@@ -49,9 +49,9 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/visualize_model_result",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/visualize_model_result",
-        cache_file_path=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/caches/visualize_model_result/{model_name}_{load_case}_cache.hdf",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/visualize_model_result",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/visualize_model_result",
+        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/visualize_model_result/{model_name}_{load_case}_cache.hdf",
     ),
 )
 model.cache = None

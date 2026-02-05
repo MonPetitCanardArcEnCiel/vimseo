@@ -22,55 +22,11 @@ import re
 from pathlib import Path
 
 import yaml
-from pydantic import Field
 
-from vimseo.config.base_configuration import BaseConfiguration
 from vimseo.config.base_configuration_factory import BaseConfigurationFactory
-from vimseo.config.config_components import DatabaseConfiguration
-from vimseo.config.config_components import Solver
+from vimseo.config.configuration_settings import VimseoSettings
 
 LOGGER = logging.getLogger(__name__)
-
-
-ENV_PREFIX = "VIMSEO_"
-
-
-class VimseoSettings(
-    BaseConfiguration,
-    validate_assignment=True,
-    env_nested_delimiter="__",
-    env_prefix=ENV_PREFIX,
-    env_file=".env",
-    extra="forbid",
-    nested_model_default_partial_update=True,
-):  # noqa: N801
-    """Global configuration."""
-
-    logging: str = Field(default="info")
-
-    solvers: dict[str, Solver] = Field(
-        default={"dummy": Solver()}, description="The solver command."
-    )
-
-    root_directory: str = Field(
-        default="", description="The root directory where tool results are written."
-    )
-
-    working_directory: str = Field(
-        default="",
-        description="The working directory where "
-        "tool results are written. If left to empty string, results are exported in "
-        "unique directories created under the root directory. If a path is prescribed, "
-        "results are exported under this path.",
-    )
-
-    archive_manager: str = Field(
-        default="DirectoryArchive", description="The archive manager"
-    )
-
-    database: DatabaseConfiguration = Field(
-        default=DatabaseConfiguration(), description=""
-    )
 
 
 # Detect plugins to agregate the config from plugins with the vimseo config
@@ -109,13 +65,9 @@ for name in plugin_names:
             f"No user config file found for plugin {name}: default settings are loaded."
         )
 
-if len(plugin_config_classes) > 0:
-    _configuration = type("AllSettings", tuple(plugin_config_classes[::-1]), {})(
-        **plugin_settings
-    )
-else:
-    _configuration = VimseoSettings()
-
+_configuration = type("AllSettings", tuple(plugin_config_classes[::-1]), {})(
+    **plugin_settings
+)
 """The global VIMSEO configuration.
 
 The feature is described

@@ -34,6 +34,7 @@ from mlflow import delete_run
 from numpy import atleast_1d
 from numpy import ndarray
 
+from vimseo.config.certificates import CONFIG_CERTIFICATES_DIR
 from vimseo.config.global_configuration import _configuration as config
 from vimseo.core.model_metadata import MetaDataNames
 from vimseo.storage_management.directory_storage import BaseArchiveManager
@@ -74,11 +75,14 @@ class MlflowArchive(BaseArchiveManager):
         self._load_case_name = load_case_name
 
         if config.database.mode == "Team":
-            self._uri = config.DB_URI_TEAM
+            self._uri = config.database.team_uri
             os.environ["MLFLOW_TRACKING_USERNAME"] = config.database.username
             os.environ["MLFLOW_TRACKING_PASSWORD"] = config.database.password
-            if config.database.ssl_certificate_file != "":
-                os.environ["REQUESTS_CA_BUNDLE"] = config.database.ssl_certificate_file
+            os.environ["REQUESTS_CA_BUNDLE"] = (
+                config.database.ssl_certificate_file
+                if config.database.ssl_certificate_file != ""
+                else str((CONFIG_CERTIFICATES_DIR / "irt_certificate.txt").absolute())
+            )
 
             if config.database.use_insecure_tls == "True":
                 os.environ["MLFLOW_TRACKING_DATABASE_USE_INSECURE_TLS"] = "true"
@@ -92,7 +96,7 @@ class MlflowArchive(BaseArchiveManager):
                 else f"file:///{Path(root_directory).absolute()!s}"
             )
         else:
-            msg = f"Wrong value for config.database_mode: {config.database.mode}"
+            msg = f"Wrong value for config.database.mode: {config.database.mode}"
             raise ValueError(msg)
 
         mlflow.set_tracking_uri(self._uri)
@@ -106,8 +110,13 @@ class MlflowArchive(BaseArchiveManager):
 
     @property
     def uri(self) -> str:
-        """The Mlflow uri."""
+        """The Mlflow database uri."""
         return self._uri
+
+    @property
+    def root_directory(self) -> str:
+        """The database uri."""
+        return f"{self._uri}"
 
     def set_experiment(
         self, experiment_name: str, tags: Mapping[str, str] | None = None

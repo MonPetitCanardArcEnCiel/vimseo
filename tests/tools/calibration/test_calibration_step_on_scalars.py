@@ -23,7 +23,7 @@ from numpy import atleast_1d
 from numpy import ndarray
 
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.io.space_io import SpaceToolFileIO
 from vimseo.tools.calibration.calibration_step import CalibrationStep
 from vimseo.tools.calibration.calibration_step import CalibrationStepInputs

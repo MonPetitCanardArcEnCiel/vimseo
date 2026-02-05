@@ -19,6 +19,7 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+import numpy as np
 import pandas as pd
 from gemseo.datasets.dataset import Dataset
 from gemseo.uncertainty import create_statistics
@@ -159,6 +160,7 @@ class StatisticsTool(BaseTool):
             scalar_names += get_scalar_names(dataset, group_name)
         df = dataset_to_dataframe(dataset, variable_names=scalar_names)
         constant_df = df.loc[:, (df == df.iloc[0]).all()]
+        constant_df = constant_df.select_dtypes([np.number])
         for constant_name in constant_df.columns:
             df[constant_name] = df[constant_name] * (
                 1 + 1e-6 * random.uniform(-1, 1, size=len(df[constant_name]))  # noqa: NPY002

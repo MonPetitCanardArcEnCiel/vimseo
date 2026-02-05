@@ -30,7 +30,7 @@ import logging
 from vimseo import EXAMPLE_RUNS_DIR_NAME
 from vimseo.api import activate_logger
 from vimseo.api import create_model
-from vimseo.core.base_integrated_model import IntegratedModelSettings
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.tools.sensitivity.sensitivity import SensitivityTool
 from vimseo.tools.space.space_tool import SpaceTool
 
@@ -46,9 +46,9 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/archive/sensitivity",
-        directory_scratch_root=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/sensitivity",
-        cache_file_path=f"../../../../../{EXAMPLE_RUNS_DIR_NAME}/caches/sensitivity/{model_name}_{load_case}_cache.hdf",
+        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/sensitivity",
+        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/sensitivity",
+        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/sensitivity/{model_name}_{load_case}_cache.hdf",
     ),
 )
 

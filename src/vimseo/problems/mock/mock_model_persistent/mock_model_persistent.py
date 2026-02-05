@@ -25,9 +25,9 @@ from numpy import atleast_1d
 
 from vimseo.core.base_component import BaseComponent
 from vimseo.core.base_integrated_model import IntegratedModel
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.components.component_factory import ComponentFactory
 from vimseo.core.model_metadata import MetaDataNames
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.problems.mock.mock_model_persistent import PATH_MOCK_FILES_PERSISTENT
 
 if TYPE_CHECKING:

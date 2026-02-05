@@ -26,21 +26,3 @@ class SubroutineWrapperFactory(BaseFactory):
 
     _CLASS = SubroutineWrapper
     _PACKAGE_NAMES = ("vimseo.core", "vimseo.wrapper", "vimseo.problems")
-
-    def create(
-        self,
-        subroutine_wrapper_name: str,
-        **options,
-    ) -> SubroutineWrapper:
-        """Create a subroutine wrapper.
-
-        Args:
-            subroutine_wrapper_name: The name of the subroutine wrappers (its class name).
-            **options: The options of the subroutine wrappers.
-        """
-        return super().create(subroutine_wrapper_name, **options)
-
-    @property
-    def subroutine_wrappers(self) -> list[str]:
-        """The names of the available subroutine wrappers."""
-        return self.class_names

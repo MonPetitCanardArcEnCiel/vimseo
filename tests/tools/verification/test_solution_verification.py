@@ -23,8 +23,10 @@ from gemseo.utils.directory_creator import DirectoryNamingMethod
 from numpy import array
 from numpy import atleast_1d
 from numpy import empty
+from numpy import ones
 from numpy.testing import assert_allclose
 from numpy.testing import assert_array_equal
+from pandas import DataFrame
 
 from vimseo.api import create_model
 from vimseo.tools.verification.solution_verification import Analysis
@@ -179,3 +181,24 @@ def test_verification_from_ratio(tmp_wd):
             dx_0 * ELEMENT_SIZE_RATIO ** (-2),
         ]),
     )
+
+
+def test_from_data(tmp_wd):
+    """Check that solution verification can take simulated data."""
+
+    df = DataFrame.from_dict({
+        ("inputs", "h", 0): array([0.5, 0.4, 0.3, 0.2, 0.1]),
+        ("outputs", "a_h", 0): array([1.5, 1.4, 1.3, 1.2, 1.1]),
+        ("outputs", "y1", 0): ones(5),
+        ("outputs", "y2", 0): ones(5),
+    })
+    verificator = DiscretizationSolutionVerification(
+        directory_naming_method=DirectoryNamingMethod.NUMBERED,
+    )
+    verificator.execute(
+        element_size_variable_name="h",
+        output_name="a_h",
+        simulated_data=df,
+        observed_output_names=["y1"],
+    )
+    verificator.plot_results(verificator.result, save=True, show=False)

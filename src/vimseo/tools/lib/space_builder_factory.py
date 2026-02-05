@@ -33,21 +33,3 @@ class SpaceBuilderFactory(BaseFactory):
 
     _CLASS = SpaceBuilder
     _PACKAGE_NAMES = ("vimseo.tools.lib",)
-
-    def create(
-        self,
-        space_builder_name: str,
-        **options,
-    ) -> SpaceBuilder:
-        """Create a parameter space builder.
-
-        Args:
-            space_builder_name: The name of the space builder (its class name).
-            **options: The options of the space builder.
-        """
-        return super().create(space_builder_name, **options)
-
-    @property
-    def space_builders(self) -> list[str]:
-        """The names of the available space builders."""
-        return self.class_names

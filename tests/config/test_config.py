@@ -50,10 +50,13 @@ def test_config_set_attr():
 def test_config_with_config_file(tmp_wd):
     """Check that configuration can be set from a .env file."""
     with (tmp_wd / ".env").open("w") as f:
-        f.write('VIMSEO_SOLVERS__DUMMY2__JOB_EXECUTOR="BaseInteractiveExecutor"\n')
+        f.write(
+            'VIMSEO_SOLVERS__DUMMY2__JOB_EXECUTOR="BaseInteractiveExecutor"\nVIMSEO_SOLVERS__DUMMY__COMMAND=""\nVIMSEO_DATABASE__MODE="Team"\n'
+        )
 
     config = VimseoSettings()
     assert {"dummy", "dummy2"} == set(config.solvers.keys())
+    assert config.database.mode == "Team"
     assert config.solvers["dummy2"].job_executor == "BaseInteractiveExecutor"
 
 

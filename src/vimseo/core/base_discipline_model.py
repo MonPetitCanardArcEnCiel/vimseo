@@ -20,10 +20,10 @@ from typing import TYPE_CHECKING
 from typing import ClassVar
 
 from vimseo.core.base_integrated_model import IntegratedModel
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.components.discipline_wrapper_component import (
     DisciplineWrapperComponent,
 )
+from vimseo.core.model_settings import IntegratedModelSettings
 
 if TYPE_CHECKING:
     from gemseo.core.discipline import Discipline

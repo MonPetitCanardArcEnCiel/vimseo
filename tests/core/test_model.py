@@ -31,7 +31,7 @@ from vimseo.api import create_model
 from vimseo.core.model_metadata import DEFAULT_METADATA
 from vimseo.core.model_metadata import MetaDataNames
 from vimseo.core.pre_run_post_model import PreRunPostModel
-from vimseo.job_executor.base_user_job_options import BaseUserJobOptions
+from vimseo.job_executor.base_user_job_options import BaseUserJobSettings
 from vimseo.problems.mock.mock_main.mock_model import MockModelWithMaterial
 from vimseo.problems.mock.mock_main.mock_model import mock_model_lc1_overall_function
 from vimseo.problems.mock.mock_main.mock_model import mock_model_lc2_overall_function
@@ -269,7 +269,7 @@ def test_input_names_groups():
 @pytest.mark.parametrize(
     ("model_name", "load_case", "user_job_options"),
     [
-        ("MockModel", "LC1", BaseUserJobOptions(n_cpus=4)),
+        ("MockModel", "LC1", BaseUserJobSettings(n_cpus=4)),
     ],
 )
 def test_set_job_options(tmp_wd, model_name, load_case, user_job_options):

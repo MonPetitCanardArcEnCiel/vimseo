@@ -37,7 +37,7 @@ def plot_curves(
     show=True,
     file_name: str | Path = "",
     labels: Iterable[str] = (),
-):
+) -> Figure:
     # Handle up to 16 curves
     nb_color_period = 4
     colors = ["blue", "red", "green", "black"] * nb_color_period

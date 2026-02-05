@@ -61,6 +61,11 @@ class DirectoryArchive(BaseArchiveManager):
         self._job_directory = ""
         self._accept_overwrite_job_dir = False
 
+    @property
+    def root_directory(self) -> str:
+        """The root directory where results are stored."""
+        return str(self._root_directory.absolute())
+
     def create_job_directory(self):
         """Create a new job directory."""
         self._job_directory = self._create_job_directory(
@@ -86,8 +91,7 @@ class DirectoryArchive(BaseArchiveManager):
 
         if not root_archive.is_dir():
             LOGGER.info(
-                "root_archive to be imported is not yet a directory (empty): ",
-                root_archive,
+                f"root_archive to be imported is not yet a directory (empty): {root_archive}",
             )
             return None
 

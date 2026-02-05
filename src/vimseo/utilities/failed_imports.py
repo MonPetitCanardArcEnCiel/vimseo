@@ -16,20 +16,13 @@
 import json
 import pathlib
 
-from vimseo.job_executor.job_executor_factory import JobExecutorFactory
 
-
-def write_failed_imports():
-def write_failed_imports():
-    factory = JobExecutorFactory()
-
+def write_failed_imports(factory_):
     (
-        pathlib.Path.cwd() / f"failed_imports_{factory.__class__.__name__}.txt"
+        pathlib.Path.cwd() / f"failed_imports_{factory_.__class__.__name__}.txt"
     ).write_text(
-        json.dumps(factory.failed_imports, indent=4) + str(factory.class_names),
+        json.dumps(factory_.failed_imports, indent=4)
+        + "\n"
+        + str(factory_.class_names),
         encoding="utf-8",
     )
-
-
-if __name__ == "__main__":
-    write_failed_imports()

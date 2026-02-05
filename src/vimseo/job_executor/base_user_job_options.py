@@ -22,7 +22,7 @@ from pydantic import Field
 from vimseo.tools.base_settings import BaseSettings
 
 
-class BaseUserJobOptions(BaseSettings):
+class BaseUserJobSettings(BaseSettings):
     """The base user job options."""
 
     n_cpus: int = Field(

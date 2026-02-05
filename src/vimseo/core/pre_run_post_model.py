@@ -21,12 +21,12 @@ from typing import TYPE_CHECKING
 from typing import ClassVar
 
 from vimseo.core.base_integrated_model import IntegratedModel
-from vimseo.core.base_integrated_model import IntegratedModelSettings
 from vimseo.core.components.component_factory import ComponentFactory
 from vimseo.core.components.subroutines.subroutine_wrapper_factory import (
     SubroutineWrapperFactory,
 )
 from vimseo.core.load_case_factory import LoadCaseFactory
+from vimseo.core.model_settings import IntegratedModelSettings
 from vimseo.material.material import Material
 
 if TYPE_CHECKING:
@@ -136,7 +136,7 @@ class PreRunPostModel(IntegratedModel):
         self._component_with_jacobian = self.run
         self._set_differentiated_names(self.run)
 
-        self.run.job_executor._user_job_options["n_cpus"] = self.N_CPUS
+        self.run.job_executor._user_job_options.update({"n_cpus": self.N_CPUS})
 
     @property
     def run(self) -> RunProcessor:

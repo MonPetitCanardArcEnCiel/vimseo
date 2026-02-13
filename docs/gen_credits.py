@@ -93,9 +93,13 @@ def _get_deps(base_deps: Mapping[str, Mapping[str, str]]) -> dict[str, dict[str,
 
 def _render_credits() -> str:
     external_dependencies = _get_deps(project["dependencies"])
+    opt_dep_key = "optional-dependencies"
+    optional_dependencies = (
+        project[opt_dep_key].values() if opt_dep_key in project else []
+    )
     external_applications = _get_deps(
         chain(
-            *project["optional-dependencies"].values(),
+            *optional_dependencies,
             (
                 "commitizen",
                 "docformatter",

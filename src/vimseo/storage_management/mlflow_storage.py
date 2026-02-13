@@ -55,6 +55,8 @@ MlflowArchiveResultType = Mapping[str, Mapping[str, ndarray | Number | str]]
 
 
 class MlflowArchive(BaseArchiveManager):
+    """A database of model results stored in an MLFlow tracking backend."""
+
     _current_run_id: str
 
     _RESULTS_JSON_FILE = "results.json"

@@ -29,6 +29,7 @@ Visualize and compare model results
 Visualize model results and compare to other model results or reference data.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

@@ -22,6 +22,7 @@ Overview of the MockConvergence for load case Dummy
 
 """
 
+# %%
 from __future__ import annotations
 
 from vimseo import EXAMPLE_RUNS_DIR

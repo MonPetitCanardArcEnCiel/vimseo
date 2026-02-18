@@ -22,6 +22,7 @@ Overview of the MockModel for load case LC1
  A toy model implementing an unphysical analytical law; used for testing purpose
 """
 
+# %%
 from __future__ import annotations
 
 from vimseo import EXAMPLE_RUNS_DIR

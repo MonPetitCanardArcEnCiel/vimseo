@@ -21,6 +21,7 @@ Usage of the model calibration based on scalar outputs
 Calibrate a model based on scalar outputs.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

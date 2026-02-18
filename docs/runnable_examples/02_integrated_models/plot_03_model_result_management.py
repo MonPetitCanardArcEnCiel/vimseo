@@ -29,6 +29,7 @@ Manage model results
 Manage model results using several result managers.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

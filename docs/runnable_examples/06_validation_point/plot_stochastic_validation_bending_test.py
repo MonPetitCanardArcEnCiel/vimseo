@@ -19,6 +19,7 @@ An example of stochastic validation point
 =========================================
 """
 
+# %%
 from __future__ import annotations
 
 import logging

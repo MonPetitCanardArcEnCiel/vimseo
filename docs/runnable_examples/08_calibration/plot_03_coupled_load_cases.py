@@ -21,6 +21,7 @@ Usage of the model calibration for several load cases in the same step
 Calibrate a model with coupling several load cases in a step.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

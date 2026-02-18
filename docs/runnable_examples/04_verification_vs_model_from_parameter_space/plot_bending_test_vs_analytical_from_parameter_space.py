@@ -22,6 +22,7 @@ Check an Abaqus cantilever beam model versus an analytical model with the
 'CodeVerificationAgainstModelFromParameterSpace' tool using as input a parameter
 space."""
 
+# %%
 from __future__ import annotations
 
 import logging

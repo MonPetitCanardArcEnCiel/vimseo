@@ -23,6 +23,7 @@ on a model output.
 The :class:`~.BendingTestAnalytical` is used to illustrate the use of this tool.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

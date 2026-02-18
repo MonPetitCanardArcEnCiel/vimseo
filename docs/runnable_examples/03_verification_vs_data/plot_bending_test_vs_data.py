@@ -22,6 +22,7 @@ Check an Abaqus cantilever beam model versus a reference dataset with the
 'CodeVerificationAgainstData' tool.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

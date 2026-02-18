@@ -22,6 +22,7 @@ Overview of the BendingTestAnalytical for load case Cantilever
  An analytical model for the bending of a parallelepipedic beam
 """
 
+# %%
 from __future__ import annotations
 
 from vimseo import EXAMPLE_RUNS_DIR

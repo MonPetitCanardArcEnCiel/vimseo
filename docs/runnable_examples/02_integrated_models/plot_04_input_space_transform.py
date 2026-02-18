@@ -20,6 +20,7 @@ Patch a pre-processor to apply transformation on input variables.
 
 """
 
+# %%
 from __future__ import annotations
 
 from gemseo.disciplines.analytic import AnalyticDiscipline

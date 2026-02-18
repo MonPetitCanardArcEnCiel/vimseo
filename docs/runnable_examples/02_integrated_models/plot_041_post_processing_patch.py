@@ -22,6 +22,7 @@ A new model is created by adding a post-processor to an existing model instance.
 The cache of the existing model is reused while running the composed model.
 """
 
+# %%
 from __future__ import annotations
 
 from numpy import atleast_1d

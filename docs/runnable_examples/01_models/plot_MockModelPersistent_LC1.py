@@ -22,6 +22,7 @@ Overview of the MockModelPersistent for load case LC1
  A toy model for testing purpose of persistent data - mono-component version
 """
 
+# %%
 from __future__ import annotations
 
 from vimseo import EXAMPLE_RUNS_DIR

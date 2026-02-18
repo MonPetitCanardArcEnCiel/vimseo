@@ -22,6 +22,7 @@ Overview of the MockModelFields for load case LC1
 
 """
 
+# %%
 from __future__ import annotations
 
 from vimseo import EXAMPLE_RUNS_DIR

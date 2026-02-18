@@ -21,6 +21,7 @@ Usage of the model calibration based on curve outputs
 Calibrate a model based on curve outputs.
 """
 
+# %%
 from __future__ import annotations
 
 import logging

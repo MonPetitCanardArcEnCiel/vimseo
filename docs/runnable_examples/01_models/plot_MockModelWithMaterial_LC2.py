@@ -22,6 +22,7 @@ Overview of the MockModelWithMaterial for load case LC2
 A toy model loading a material
 """
 
+# %%
 from __future__ import annotations
 
 from vimseo import EXAMPLE_RUNS_DIR

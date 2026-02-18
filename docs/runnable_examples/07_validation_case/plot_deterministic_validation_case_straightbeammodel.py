@@ -19,6 +19,7 @@ Deterministic validation case on the bending test analytical beam model against 
 ======================================================================================================
 """
 
+# %%
 from __future__ import annotations
 
 import logging

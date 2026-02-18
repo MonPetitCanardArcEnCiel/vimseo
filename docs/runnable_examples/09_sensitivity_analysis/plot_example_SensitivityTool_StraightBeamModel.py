@@ -32,6 +32,7 @@ BendingTestAnalytical is used to illustrate the use of this tool.
 # %%
 # Import the packages
 # --------------------------
+# %%
 from __future__ import annotations
 
 import logging

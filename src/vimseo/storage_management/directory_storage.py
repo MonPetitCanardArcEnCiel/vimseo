@@ -40,6 +40,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class DirectoryArchive(BaseArchiveManager):
+    """A database of model results stored in local directories."""
+
     _RESULTS_JSON_FILE = "results.json"
 
     def __init__(

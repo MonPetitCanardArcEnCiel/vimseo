@@ -53,6 +53,8 @@ ArchiveResultType = Mapping[str, Mapping[str, ndarray | Number | str]]
 
 
 class BaseArchiveManager(BaseStorageManager):
+    """A base class for result database storage."""
+
     _persistent_file_names: list[str]
 
     def __init__(

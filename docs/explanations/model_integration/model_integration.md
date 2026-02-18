@@ -47,7 +47,7 @@ Indeed these two activities involve a large number of model runs:
 
 ![](modelling_strategies.png){ width="600" }
 
-The three following modelling approaches have been developped:
+The three following modelling approaches have been developed:
 
   - The OpfmUnitCell model. It does not require a finite-element solver and it
     does not account for the geometry or the stacking sequence.
@@ -70,13 +70,13 @@ The three following modelling approaches have been developped:
     through the thickness.
     Its computational time is a few minutes on a single CPU.
     It is useful for calibration, sensitivity analysis and
-    load cases with uniform stress distribution (some PS)
+    load cases with uniform stress distribution.
 
   - The OpfmPlate model.
     It accounts for the actual geometry of the specimen
     and for the stacking sequence.
     The PS geometries are modelled with ply-by-ply with 3D solid elements,
-    while the OH is modelled with laminated shell.
+    while the Open Hole (OH) is modelled with laminated shell.
     The computational time is at least one order of magnitude larger
     than the OpfmCube model.
 

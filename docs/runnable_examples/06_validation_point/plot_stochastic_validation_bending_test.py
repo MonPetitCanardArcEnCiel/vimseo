@@ -62,6 +62,10 @@ target_model = create_model(
     model_options=IntegratedModelSettings(
         directory_archive_persistency=PersistencyPolicy.DELETE_ALWAYS,
         directory_scratch_persistency=PersistencyPolicy.DELETE_ALWAYS,
+        directory_archive_root=EXAMPLE_RUNS_DIR / "archive/validation_point",
+        directory_scratch_root=EXAMPLE_RUNS_DIR / "scratch/validation_point",
+        cache_file_path=EXAMPLE_RUNS_DIR
+        / f"caches/validation_point/target_{model_name}_{load_case}_cache.hdf",
     ),
 )
 target_model.cache = None

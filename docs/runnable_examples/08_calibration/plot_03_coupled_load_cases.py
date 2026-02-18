@@ -69,6 +69,10 @@ target_model_cantilever = create_model(
     model_options=IntegratedModelSettings(
         directory_archive_persistency=PersistencyPolicy.DELETE_ALWAYS,
         directory_scratch_persistency=PersistencyPolicy.DELETE_ALWAYS,
+        directory_archive_root=EXAMPLE_RUNS_DIR / "archive/coupled_load",
+        directory_scratch_root=EXAMPLE_RUNS_DIR / "scratch/coupled_load",
+        cache_file_path=EXAMPLE_RUNS_DIR
+        / f"caches/coupled_load/target_{model_name}_Cantilever_cache.hdf",
     ),
 )
 target_young_modulus_cantilever = 2.2e5
@@ -93,6 +97,10 @@ target_model_three_points = create_model(
     model_options=IntegratedModelSettings(
         directory_archive_persistency=PersistencyPolicy.DELETE_ALWAYS,
         directory_scratch_persistency=PersistencyPolicy.DELETE_ALWAYS,
+        directory_archive_root=EXAMPLE_RUNS_DIR / "archive/coupled_load",
+        directory_scratch_root=EXAMPLE_RUNS_DIR / "scratch/coupled_load",
+        cache_file_path=EXAMPLE_RUNS_DIR
+        / f"caches/coupled_load/target_{model_name}_ThreePoints_cache.hdf",
     ),
 )
 target_young_modulus_three_points = 2.3e5

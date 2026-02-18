@@ -29,7 +29,7 @@ from gemseo.algos.opt.nlopt.settings.nlopt_cobyla_settings import NLOPT_COBYLA_S
 from gemseo_calibration.calibrator import CalibrationMetricSettings
 from numpy import atleast_1d
 
-from vimseo import EXAMPLE_RUNS_DIR_NAME
+from vimseo import EXAMPLE_RUNS_DIR
 from vimseo.api import activate_logger
 from vimseo.api import create_model
 from vimseo.core.model_settings import IntegratedModelSettings
@@ -112,18 +112,20 @@ model_cantilever = create_model(
     model_name,
     "Cantilever",
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/calibration_coupled",
-        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/calibration_coupled",
-        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/calibration_coupled/{model_name}_Cantilever_cache.hdf",
+        directory_archive_root=EXAMPLE_RUNS_DIR / "archive/calibration_coupled",
+        directory_scratch_root=EXAMPLE_RUNS_DIR / "scratch/calibration_coupled",
+        cache_file_path=EXAMPLE_RUNS_DIR
+        / f"caches/calibration_coupled/{model_name}_Cantilever_cache.hdf",
     ),
 )
 model_three_points = create_model(
     model_name,
     "ThreePoints",
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/calibration_coupled",
-        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/calibration_coupled",
-        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/calibration_coupled/{model_name}_ThreePoints_cache.hdf",
+        directory_archive_root=EXAMPLE_RUNS_DIR / "archive/calibration_coupled",
+        directory_scratch_root=EXAMPLE_RUNS_DIR / "scratch/calibration_coupled",
+        cache_file_path=EXAMPLE_RUNS_DIR
+        / f"caches/calibration_coupled/{model_name}_ThreePoints_cache.hdf",
     ),
 )
 

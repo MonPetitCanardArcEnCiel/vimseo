@@ -29,6 +29,7 @@ Usage of the BendingTestAnalytical
 BendingTestAnalytical is a simple model implemented for testing and training purpose.
 """
 
+# %%
 from __future__ import annotations
 
 import logging
@@ -36,7 +37,7 @@ import logging
 from gemseo.core.discipline import Discipline
 from numpy import array
 
-from vimseo import EXAMPLE_RUNS_DIR_NAME
+from vimseo import EXAMPLE_RUNS_DIR
 from vimseo.api import activate_logger
 from vimseo.api import create_model
 from vimseo.core.model_settings import IntegratedModelSettings
@@ -58,9 +59,10 @@ model = create_model(
     model_name,
     load_case,
     model_options=IntegratedModelSettings(
-        directory_archive_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/archive/basic_usage",
-        directory_scratch_root=f"../../../{EXAMPLE_RUNS_DIR_NAME}/scratch/basic_usage",
-        cache_file_path=f"../../../{EXAMPLE_RUNS_DIR_NAME}/caches/basic_usage/{model_name}_{load_case}_cache.hdf",
+        directory_archive_root=EXAMPLE_RUNS_DIR / "archive/basic_usage",
+        directory_scratch_root=EXAMPLE_RUNS_DIR / "scratch/basic_usage",
+        cache_file_path=EXAMPLE_RUNS_DIR
+        / f"caches/basic_usage/{model_name}_{load_case}_cache.hdf",
     ),
 )
 model.set_cache(Discipline.CacheType.NONE)
@@ -160,3 +162,5 @@ figures["dplt_vs_dplt_grid"]
 # and passed to the model's job executor. To set the number of CPUs to 2,
 # the following command can be used:
 # ``model.run.job_executor.set_options(BaseUserJobSettings(n_cpus=2))``.
+
+# %%
